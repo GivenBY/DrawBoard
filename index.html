@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DrawBoard</title>
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="enclosed">
+      <div class="sidebar">
+        <div class="toolbox">
+          <div class="text-center">
+            <input
+              style="width: 20px"
+              type="text"
+              id="size"
+              value="1"
+              inputmode="numeric"
+              pattern="\d*"
+              onchange="updateValue(event)"
+            />
+
+            <div>
+              <button id="decrease">-</button>
+              <button id="increase">+</button>
+            </div>
+          </div>
+          <label for="color"></label>
+          <input class="color-picker" value="#000000" type="color" id="color" />
+          <button id="clear">
+            <div class="tooltip">
+              <i class="fa-solid fa-eraser fa-1x"></i>
+              <span class="tooltiptext">Clear All</span>
+            </div>
+          </button>
+        </div>
+        <div class="toolbox">
+          <button id="redo">
+            <div class="tooltip">
+              <i class="fa-solid fa-rotate-left fa-2x"></i>
+              <span class="tooltiptext">undo</span>
+            </div>
+          </button>
+          <button id="undo">
+            <div class="tooltip">
+              <i class="fa-solid fa-rotate-right fa-2x"></i>
+              <span class="tooltiptext">redo</span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <canvas id="canvas" width="1600" height="1000"></canvas>
+    </div>
+  </body>
+</html>
