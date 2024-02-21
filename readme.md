@@ -45,10 +45,6 @@ This repository contains a simple drawing board implemented using HTML, CSS, and
 
 Feel free to prioritize and modify the tasks based on your development roadmap. Contributions are welcome!
 
-## Additional Notes
-
-The canvas has a default size of 1600x1000 pixels. You can modify the canvas size by adjusting the `width` and `height` attributes in the `<canvas>` tag.
-
 ## Contributing
 
 Contributions are welcome! If you have ideas for additional features or improvements, feel free to fork the repository and submit a pull request.
