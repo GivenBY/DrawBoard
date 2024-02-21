@@ -3,59 +3,102 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DrawBoard</title>
-    <script src="main.js" defer></script>
+    <meta name="title" content="DrawBoard" />
+    <meta
+      name="description"
+      content="DrawBoard is a versatile whiteboard tool with features for easy drawing, including undo/redo functionality and a variety of shapes and eraser options."
+    />
+
+    <!-- Open Graph (Facebook) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://givenby.github.io/DrawBoard/" />
+    <meta property="og:title" content="DrawBoard - Draw anything You Like" />
+    <meta
+      property="og:description"
+      content="DrawBoard is a versatile whiteboard tool with features for easy drawing, including undo/redo functionality and a variety of shapes and eraser options."
+    />
+    <meta property="og:image" content="image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://givenby.github.io/DrawBoard/"
+    />
+    <meta
+      property="twitter:title"
+      content="DrawBoard - Draw anything You Like"
+    />
+    <meta
+      property="twitter:description"
+      content="DrawBoard is a versatile whiteboard tool with features for easy drawing, including undo/redo functionality and a variety of shapes and eraser options."
+    />
+    <meta property="twitter:image" content="image.jpg" />
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-  </head>
-  <body>
-    <div class="enclosed">
-      <div class="sidebar">
-        <div class="toolbox">
-          <div class="text-center">
-            <input
-              style="width: 20px"
-              type="text"
-              id="size"
-              value="1"
-              inputmode="numeric"
-              pattern="\d*"
-              onchange="updateValue(event)"
-            />
 
-            <div>
-              <button id="decrease">-</button>
-              <button id="increase">+</button>
-            </div>
-          </div>
-          <label for="color"></label>
-          <input class="color-picker" value="#000000" type="color" id="color" />
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/logo.png" />
+
+    <title>DrawBoard</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="size">
+          <button id="decrease">&minus;</button
+          ><input
+            class="input-field"
+            type="number"
+            id="size"
+            value="1"
+            min="1"
+            max="100"
+            onchange="updateValue(event)"
+          />
+
+          <button id="increase">&plus;</button>
+        </div>
+        <input class="color-picker" value="#000000" type="color" id="color" />
+
+        <div class="toolbox">
           <button id="clear">
             <div class="tooltip">
-              <i class="fa-solid fa-eraser fa-1x"></i>
+              <i class="fa-solid fa-eraser fa-lg"></i>
               <span class="tooltiptext">Clear All</span>
-            </div>
-          </button>
-        </div>
-        <div class="toolbox">
-          <button id="redo">
-            <div class="tooltip">
-              <i class="fa-solid fa-rotate-left fa-2x"></i>
-              <span class="tooltiptext">undo</span>
             </div>
           </button>
           <button id="undo">
             <div class="tooltip">
-              <i class="fa-solid fa-rotate-right fa-2x"></i>
-              <span class="tooltiptext">redo</span>
+              <i class="fa-solid fa-rotate-left fa-lg"></i>
+              <span class="tooltiptext">Undo</span>
+            </div>
+          </button>
+          <button id="redo">
+            <div class="tooltip">
+              <i class="fa-solid fa-rotate-right fa-lg"></i>
+              <span class="tooltiptext">Redo</span>
             </div>
           </button>
         </div>
       </div>
-      <canvas id="canvas" width="1600" height="1000"></canvas>
+      <div class="enclosed">
+        <canvas id="canvas" style="background: #fff"></canvas>
+      </div>
     </div>
+    <!-- Scripts -->
+    <script src="main.js" defer></script>
   </body>
 </html>

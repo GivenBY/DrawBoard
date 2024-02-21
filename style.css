@@ -1,79 +1,117 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap");
-
+/* CSS Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Body  */
 body {
-  display: flex;
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
   font-family: "Poppins", sans-serif;
-}
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
+  background: url(https://source.unsplash.com/E8Ufcyxz514/2400x1823) no-repeat
+    center center/cover;
+  text-align: center;
 }
 
+/* Outer container */
+.container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Sidebar  */
+.sidebar {
+  max-width: 120px;
+  margin: 20px 0px;
+  margin-right: 20px;
+  height: 100%;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+  z-index: 2;
+}
+
+/* Label */
 .tooltip .tooltiptext {
   visibility: hidden;
   width: 120px;
-  background-color: black;
+  background-color: rgba(38, 70, 83, 0.7);
   color: #fff;
-  text-align: center;
   border-radius: 6px;
   padding: 5px 0;
-
-  /* Position the tooltip */
   position: absolute;
-  z-index: 1;
+  z-index: 2;
 }
-
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
 
-.enclosed {
+/* Size field Container */
+.size {
   display: flex;
-  width: 100%;
-  height: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
 }
 
-.sidebar {
-  background-color: #393e40;
-  color: white;
-  padding: 20px 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.toolbox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 60px;
-}
-.toolbox div {
-  display: block;
-}
-canvas {
-  background-color: #efefef;
-  border: 2px solid #000000;
-}
-.color-picker {
+/* Increase and Decrease Button */
+#increase,
+#decrease {
+  width: 35px;
+  height: 30px;
+  font-size: 20px;
+  background-color: rgba(173, 181, 189, 0.5);
   border: none;
+  color: white;
+  transition: border-color 0.3s;
 }
-input[type="color"] {
+
+#increase:hover,
+#decrease:hover {
+  border: 1px solid white;
+}
+
+#increase {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+#decrease {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+/* Size Input Field */
+.input-field {
+  width: 30px;
+  height: 30px;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  transition: border-color 0.3s;
+  background-color: rgba(173, 181, 189, 0.5);
+}
+
+/* To remove the arrow up/down from the size input field */
+.input-field::-webkit-inner-spin-button,
+.input-field::-webkit-outer-spin-button {
   -webkit-appearance: none;
-  appearance: none;
+}
+
+.color-picker {
   border: none;
   width: 32px;
   height: 32px;
@@ -84,26 +122,36 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 input[type="color"]::-webkit-color-swatch {
   border: none;
 }
-.toolbox div {
-  display: block;
-}
 
-#redo,
-#undo {
+button {
+  font-size: 20px;
   background-color: transparent;
   border: none;
   color: white;
-  padding: 5px 0px;
 }
-#increase,
-#decrease,
+
 #clear {
   font-size: 20px;
   background-color: transparent;
   border: none;
   color: white;
-  padding: 5px 5px;
 }
-.text-center {
-  text-align: center;
+
+.toolbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+  height: 100%;
+}
+
+canvas {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+  z-index: 1;
 }

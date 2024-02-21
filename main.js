@@ -1,108 +1,143 @@
 const canvas = document.getElementById("canvas");
+const sizeElement = document.getElementById("size");
+const colorElement = document.getElementById("color");
+const clearElement = document.getElementById("clear");
+const increaseButton = document.getElementById("increase");
+const decreaseButton = document.getElementById("decrease");
+const redoButton = document.getElementById("redo");
+const undoButton = document.getElementById("undo");
 const ctx = canvas.getContext("2d");
-function setUpCanvas() {
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  ctx.translate(0.5, 0.5);
-  var sizeWidth = (100 * window.innerWidth) / 100 - 60,
-    sizeHeight = (100 * window.innerHeight) / 100 || 766;
-  canvas.width = sizeWidth;
-  canvas.height = sizeHeight;
-  canvas.style.width = sizeWidth;
-  canvas.style.height = sizeHeight;
-}
 
-window.onload = setUpCanvas();
-const sizeEl = document.getElementById("size");
-const colorEl = document.getElementById("color");
-const clearEl = document.getElementById("clear");
-const increaseBtn = document.getElementById("increase");
-const decreaseBtn = document.getElementById("decrease");
+// Resize the canvas
+function resizeCanvas() {
+  canvas.width = window.innerWidth - 170;
+  canvas.height = window.innerHeight - 40;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+let color = "black";
+
+// Update the Color of the brush
+colorElement.addEventListener("change", (e) => {
+  color = e.target.value;
+});
 
 let size = 1;
-let x = undefined;
-let y = undefined;
-let color = "black";
-let isPressed = false;
 
-canvas.addEventListener("mousedown", (e) => {
-  isPressed = true;
-
-  x = e.offsetX;
-  y = e.offsetY;
-});
-
-canvas.addEventListener("mouseup", () => {
-  isPressed = false;
-
-  x = undefined;
-  y = undefined;
-});
-
+// Update the size of the brush on the screen using input Field
 function updateValue(e) {
   const newSize = parseInt(e.target.value, 10);
 
-  // Check if parsing was successful and newSize is a valid integer
   if (!isNaN(newSize)) {
     size = newSize;
-    sizeEl.value = size;
+    sizeElement.value = size;
   } else {
     console.log("Invalid input. Please enter a numeric value.");
   }
 }
 
-canvas.addEventListener("mousemove", (e) => {
-  if (isPressed) {
-    const x2 = e.offsetX;
-    const y2 = e.offsetY;
-
-    drawCircle(x2, y2);
-    drawLine(x, y, x2, y2);
-    x = x2;
-    y = y2;
-  }
-});
-
-function drawCircle(x, y) {
-  ctx.beginPath();
-  ctx.arc(x, y, size, 0, Math.PI * 2);
-  ctx.fillStyle = color;
-  ctx.fill();
-}
-
-function drawLine(x1, y1, x2, y2) {
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = size * 2;
-  ctx.stroke();
-}
-
-increaseBtn.addEventListener("click", () => {
+// Increase and decrease the size of the brush using buttons
+increaseButton.addEventListener("click", () => {
   size += 1;
 
   if (size > 50) {
     size = 50;
   }
-  sizeEl.value = size;
+  sizeElement.value = size;
   updateSizeOnScreen();
 });
 
-decreaseBtn.addEventListener("click", () => {
+decreaseButton.addEventListener("click", () => {
   size -= 1;
 
   if (size < 1) {
     size = 1;
   }
-  sizeEl.value = size;
+  sizeElement.value = size;
   updateSizeOnScreen();
 });
 
-colorEl.addEventListener("change", (e) => {
-  color = e.target.value;
+// Drawing Constraints
+let isDrawing = false;
+let lines = [];
+let undoStack = [];
+let points = [];
+var mouse = { x: 0, y: 0 };
+var previous = { x: 0, y: 0 };
+
+// Drawing Functionality
+canvas.addEventListener("mousedown", (e) => {
+  isDrawing = true;
+  previous = { x: mouse.x, y: mouse.y };
+  mouse = mousePos(canvas, e);
+  points = [];
+  points.push({ x: mouse.x, y: mouse.y });
 });
 
-clearEl.addEventListener("click", () => {
+canvas.addEventListener("mousemove", (e) => {
+  if (isDrawing) {
+    previous = { x: mouse.x, y: mouse.y };
+    mouse = mousePos(canvas, e);
+    points.push({ x: mouse.x, y: mouse.y });
+    ctx.beginPath();
+    ctx.moveTo(previous.x, previous.y);
+    ctx.lineTo(mouse.x, mouse.y);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
+    ctx.lineCap = "round";
+    ctx.stroke();
+  }
+});
+
+canvas.addEventListener("mouseup", (e) => {
+  isDrawing = false;
+  lines.push(points);
+  console.log(lines);
+});
+
+// Helps to clear everything on the canvas
+clearElement.addEventListener("click", () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
+
+// Undo Redo Event Listeners
+undoButton.addEventListener("click", Undo);
+redoButton.addEventListener("click", redo);
+
+// Function to find the mouse position
+function mousePos(canvas, e) {
+  var ClientRect = canvas.getBoundingClientRect();
+  return {
+    x: Math.round(e.clientX - ClientRect.left),
+    y: Math.round(e.clientY - ClientRect.top),
+  };
+}
+
+// Function to draw the paths again on the canvas
+function drawPaths() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  lines.forEach((path) => {
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
+    for (let i = 1; i < path.length; i++) {
+      ctx.lineTo(path[i].x, path[i].y);
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
+    ctx.lineCap = "round";
+    ctx.stroke();
+  });
+}
+
+// Undo Redo Functionality
+function Undo() {
+  if (lines.length === 0) return;
+  undoStack.push(lines.pop());
+  drawPaths();
+}
+function redo() {
+  if (undoStack.length === 0) return;
+  lines.push(undoStack.pop());
+  drawPaths();
+}
