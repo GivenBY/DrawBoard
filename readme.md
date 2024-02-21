@@ -34,9 +34,9 @@ This repository contains a simple drawing board implemented using HTML, CSS, and
 
 ## To-Do
 
-- [ ] Integrate the undo button functionality.
-- [ ] Integrate the redo button functionality.
-- [ ] Simplify JavaScript code for better maintainability.
+- [x] Integrate the undo button functionality.
+- [x] Integrate the redo button functionality.
+- [x] Simplify JavaScript code for better maintainability.
 - [ ] Implement additional drawing features:
   - [ ] Square tool
   - [ ] Circle tool
