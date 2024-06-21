@@ -8,8 +8,8 @@
 /* Body  */
 body {
   font-family: "Poppins", sans-serif;
-  background: url(https://source.unsplash.com/E8Ufcyxz514/2400x1823) no-repeat
-    center center/cover;
+  background-color: #4158D0;
+  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
   text-align: center;
 }
 
