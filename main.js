@@ -16,13 +16,6 @@ if (!canvas || !sizeElement || !colorElement || !clearElement || !increaseButton
 
 // Resize the canvas
 let resizeTimeout;
-function resizeCanvas() {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    canvas.width = window.innerWidth - 170;
-    canvas.height = window.innerHeight - 40;
-  }, 100);
-}
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
@@ -34,23 +27,6 @@ colorElement.addEventListener("change", (e) => {
 
 // Update the size of the brush on the screen using input Field
 let size = 1;
-function updateValue(e) {
-  const newSize = parseInt(e.target.value, 10);
-
-  if (!isNaN(newSize)) {
-    size = newSize;
-    sizeElement.value = size;
-  } else {
-    console.log("Invalid input. Please enter a numeric value.");
-  }
-}
-
-// Increase and decrease the size of the brush using buttons
-function updateBrushSize(increment) {
-  size = Math.min(50, Math.max(1, size + increment));
-  sizeElement.value = size;
-  updateSizeOnScreen();
-}
 
 increaseButton.addEventListener("click", () => updateBrushSize(1));
 decreaseButton.addEventListener("click", () => updateBrushSize(-1));
@@ -86,6 +62,36 @@ canvas.addEventListener("mouseup", () => {
   }
 });
 
+clearElement.addEventListener("click", clear);
+undoButton.addEventListener("click", Undo);
+redoButton.addEventListener("click", redo);
+
+function resizeCanvas() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    canvas.width = window.innerWidth - 170;
+    canvas.height = window.innerHeight - 40;
+  }, 100);
+}
+
+function updateValue(e) {
+  const newSize = parseInt(e.target.value, 10);
+
+  if (!isNaN(newSize)) {
+    size = newSize;
+    sizeElement.value = size;
+  } else {
+    console.log("Invalid input. Please enter a numeric value.");
+  }
+}
+
+// Increase and decrease the size of the brush using buttons
+function updateBrushSize(increment) {
+  size = Math.min(50, Math.max(1, size + increment));
+  sizeElement.value = size;
+  updateSizeOnScreen();
+}
+
 function drawLine(prev, curr) {
   requestAnimationFrame(() => {
     ctx.beginPath();
@@ -97,15 +103,6 @@ function drawLine(prev, curr) {
     ctx.stroke();
   });
 }
-
-// Helps to clear everything on the canvas
-clearElement.addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
-
-// Undo Redo Event Listeners
-undoButton.addEventListener("click", Undo);
-redoButton.addEventListener("click", redo);
 
 // Function to find the mouse position
 function mousePos(canvas, e) {
@@ -132,12 +129,16 @@ function drawPaths() {
   });
 }
 
-// Undo Redo Functionality
+function clear() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function Undo() {
   if (lines.length === 0) return;
   undoStack.push(lines.pop());
   drawPaths();
 }
+
 function redo() {
   if (undoStack.length === 0) return;
   lines.push(undoStack.pop());
