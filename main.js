@@ -8,24 +8,32 @@ const redoButton = document.getElementById("redo");
 const undoButton = document.getElementById("undo");
 const ctx = canvas.getContext("2d");
 
+// Error handling for DOM elements to ensure they exist before adding event listeners
+if (!canvas || !sizeElement || !colorElement || !clearElement || !increaseButton || !decreaseButton || !redoButton || !undoButton) {
+  console.error("One or more required DOM elements are missing.");
+  return;
+}
+
 // Resize the canvas
+let resizeTimeout;
 function resizeCanvas() {
-  canvas.width = window.innerWidth - 170;
-  canvas.height = window.innerHeight - 40;
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    canvas.width = window.innerWidth - 170;
+    canvas.height = window.innerHeight - 40;
+  }, 100);
 }
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-let color = "black";
-
 // Update the Color of the brush
+let color = "black";
 colorElement.addEventListener("change", (e) => {
   color = e.target.value;
 });
 
-let size = 1;
-
 // Update the size of the brush on the screen using input Field
+let size = 1;
 function updateValue(e) {
   const newSize = parseInt(e.target.value, 10);
 
@@ -38,41 +46,28 @@ function updateValue(e) {
 }
 
 // Increase and decrease the size of the brush using buttons
-increaseButton.addEventListener("click", () => {
-  size += 1;
-
-  if (size > 50) {
-    size = 50;
-  }
+function updateBrushSize(increment) {
+  size = Math.min(50, Math.max(1, size + increment));
   sizeElement.value = size;
   updateSizeOnScreen();
-});
+}
 
-decreaseButton.addEventListener("click", () => {
-  size -= 1;
-
-  if (size < 1) {
-    size = 1;
-  }
-  sizeElement.value = size;
-  updateSizeOnScreen();
-});
+increaseButton.addEventListener("click", () => updateBrushSize(1));
+decreaseButton.addEventListener("click", () => updateBrushSize(-1));
 
 // Drawing Constraints
 let isDrawing = false;
+let points = [];
 let lines = [];
 let undoStack = [];
-let points = [];
 var mouse = { x: 0, y: 0 };
 var previous = { x: 0, y: 0 };
 
-// Drawing Functionality
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
   previous = { x: mouse.x, y: mouse.y };
   mouse = mousePos(canvas, e);
-  points = [];
-  points.push({ x: mouse.x, y: mouse.y });
+  points = [{ x: mouse.x, y: mouse.y }];
 });
 
 canvas.addEventListener("mousemove", (e) => {
@@ -80,21 +75,28 @@ canvas.addEventListener("mousemove", (e) => {
     previous = { x: mouse.x, y: mouse.y };
     mouse = mousePos(canvas, e);
     points.push({ x: mouse.x, y: mouse.y });
+    drawLine(previous, mouse);
+  }
+});
+
+canvas.addEventListener("mouseup", () => {
+  if (isDrawing) {
+    isDrawing = false;
+    lines.push([...points]);
+  }
+});
+
+function drawLine(prev, curr) {
+  requestAnimationFrame(() => {
     ctx.beginPath();
-    ctx.moveTo(previous.x, previous.y);
-    ctx.lineTo(mouse.x, mouse.y);
+    ctx.moveTo(prev.x, prev.y);
+    ctx.lineTo(curr.x, curr.y);
     ctx.strokeStyle = color;
     ctx.lineWidth = size;
     ctx.lineCap = "round";
     ctx.stroke();
-  }
-});
-
-canvas.addEventListener("mouseup", (e) => {
-  isDrawing = false;
-  lines.push(points);
-  console.log(lines);
-});
+  });
+}
 
 // Helps to clear everything on the canvas
 clearElement.addEventListener("click", () => {
@@ -117,7 +119,7 @@ function mousePos(canvas, e) {
 // Function to draw the paths again on the canvas
 function drawPaths() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  lines.forEach((path) => {
+  lines.forEach(path => {
     ctx.beginPath();
     ctx.moveTo(path[0].x, path[0].y);
     for (let i = 1; i < path.length; i++) {
