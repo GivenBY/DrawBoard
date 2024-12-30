@@ -11,7 +11,6 @@ const ctx = canvas.getContext("2d");
 // Error handling for DOM elements to ensure they exist before adding event listeners
 if (!canvas || !sizeElement || !colorElement || !clearElement || !increaseButton || !decreaseButton || !redoButton || !undoButton) {
   console.error("One or more required DOM elements are missing.");
-  return;
 }
 
 // Resize the canvas
